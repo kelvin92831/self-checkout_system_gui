@@ -18,11 +18,11 @@ item_data = {
     "strawberry": {"name": "草莓麵包", "price": 25},
     "pudding": {"name": "布丁麵包", "price": 25},
     "meat_floss": {"name": "肉鬆麵包", "price": 30},
-    "pizza": {"name": "披薩麵包", "price": 20},
-    "matcha": {"name": "抹茶麵包", "price": 20},
-    "sugar": {"name": "糖霜麵包", "price": 20},
-    "strawberry_donat": {"name": "草莓甜甜圈", "price": 20},
-    "black_eye": {"name": "黑眼豆豆麵包", "price": 20},
+    "pizza": {"name": "披薩麵包", "price": 40},
+    "matcha": {"name": "抹茶麵包", "price": 35},
+    "sugar": {"name": "糖霜麵包", "price": 30},
+    "strawberry_donat": {"name": "草莓甜甜圈", "price": 30},
+    "black_eye": {"name": "黑岩豆豆麵包", "price": 35},
 
 }
 
