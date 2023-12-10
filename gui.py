@@ -12,18 +12,25 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 item_data = {
-    0: {"name": "strawberry", "price": 50},
-    1: {"name": "berry", "price": 20},
-    2: {"name": "apple", "price": 10},
-    3: {"name": "banana", "price": 15},
-    4: {"name": "cheery", "price": 20}
+    "donat": {"name": "甜甜圈", "price": 20},
+    "grape": {"name": "葡萄乾麵包", "price": 40},
+    "square": {"name": "大理石磚麵包", "price": 50},
+    "strawberry": {"name": "草莓麵包", "price": 25},
+    "pudding": {"name": "布丁麵包", "price": 25},
+    "meat_floss": {"name": "肉鬆麵包", "price": 30},
+    "pizza": {"name": "披薩麵包", "price": 20},
+    "matcha": {"name": "抹茶麵包", "price": 20},
+    "sugar": {"name": "糖霜麵包", "price": 20},
+    "strawberry_donat": {"name": "草莓甜甜圈", "price": 20},
+    "black_eye": {"name": "黑眼豆豆麵包", "price": 20},
+
 }
 
 item_num = 5
 
 def reload():
     try:
-        for i in range(0, item_num):
+        for i in list(item_data.keys()):
             canvas.delete(f"item_text_{i}")
         canvas.delete("items_n")
         canvas.delete("total")        
@@ -39,7 +46,7 @@ def reload():
             for item_id, count in id_counts.items():
                 cnt+=1
                 # 取得字典中對應的項目資料
-                item_info = item_data.get(int(item_id), {"name": "Unknown", "price": "N/A"})
+                item_info = item_data.get(item_id, {"name": "Unknown", "price": "N/A"})
                 
                 # 格式化要顯示的文字
                 text_content = [f"{item_info['name']}", f"*{count}", f"$ {item_info['price']*count}"]
