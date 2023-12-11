@@ -56,6 +56,7 @@ def reload():
                 canvas.delete(f"item_text_{item_id}")
  
                 # 在 Canvas 上顯示文字
+                
                 offsets = [30, 170, 250]
                 for el in range(3):
                     canvas.create_text(
@@ -66,7 +67,7 @@ def reload():
                         font=("Inter Bold", 16),
                         tag=f"item_text_{item_id}"  # 使用 tag 以便稍後清除
                     )
-
+                
             canvas.create_text(
                 255.0,
                 271.0,
@@ -109,11 +110,6 @@ window = Tk()
 window.geometry("532x314")
 window.configure(bg = "#FFFFFF")
 
-frame = Frame(window)
-frame.pack(pady=10)
-
-item_text = Label(frame, text="hello", font=("Inter Bold", 36))
-item_text.pack()
 
 canvas = Canvas(
     window,
