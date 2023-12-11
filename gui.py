@@ -138,14 +138,6 @@ canvas.create_rectangle(
     fill="#FFFFFF",
     outline="")
 
-canvas.create_text(
-    27.0,
-    58.0,
-    anchor="nw",
-    text="Item:",
-    fill="#000000",
-    font=("Inter Bold", 20 * -1)
-)
 
 canvas.create_rectangle(
     8.0,
@@ -170,6 +162,15 @@ canvas.create_text(
     text="Self-checkout System",
     fill="#000000",
     font=("Inter SemiBold", 20 * -1)
+)
+
+canvas.create_text(
+    27.0,
+    58.0,
+    anchor="nw",
+    text="Item:",
+    fill="#000000",
+    font=("Inter Bold", 20 * -1)
 )
 
 canvas.create_text(
