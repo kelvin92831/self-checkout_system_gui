@@ -6,7 +6,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Label, Frame, S
 from collections import Counter
 OUTPUT_PATH = Path(__file__).parent
 print(OUTPUT_PATH)
-ASSETS_PATH = OUTPUT_PATH / "assets/frame0"  #modifiled
+ASSETS_PATH = OUTPUT_PATH / "assets/frame0"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -26,7 +26,8 @@ item_data = {
 
 }
 
-item_num = 5
+# item_num = 5
+output_file = "output2.txt" # can choose output txt file here !
 
 def reload():
     try:
@@ -35,7 +36,7 @@ def reload():
         canvas.delete("items_n")
         canvas.delete("total")        
 
-        with open("output.txt", "r") as file:
+        with open(output_file, "r") as file:
             lines = file.readlines()
             item_ids = [line.split()[0] for line in lines]
 
@@ -53,20 +54,21 @@ def reload():
                 total += item_info['price'] * count
 
                 # 清除先前的文字
-                canvas.delete(f"item_text_{item_id}")
+                scroll_canvas.delete(f"item_text_{item_id}")
  
                 # 在 Canvas 上顯示文字
                 
                 offsets = [30, 170, 250]
                 for el in range(3):
-                    canvas.create_text(
-                        offsets[el], 70 + cnt * 30,  # 位置 (x, y)，每個項目間隔 50 個像素
+                    scroll_canvas.create_text(
+                        offsets[el], cnt * 30,  # 位置 (x, y)，每個項目間隔 50 個像素
                         anchor="nw",
                         text=text_content[el],
                         fill="#000000",
                         font=("Inter Bold", 16),
                         tag=f"item_text_{item_id}"  # 使用 tag 以便稍後清除
                     )
+                scroll_canvas.configure(scrollregion = scroll_canvas.bbox("all"))
                 
             canvas.create_text(
                 255.0,
@@ -110,7 +112,6 @@ window = Tk()
 window.geometry("532x314")
 window.configure(bg = "#FFFFFF")
 
-
 canvas = Canvas(
     window,
     bg = "#FFFFFF",
@@ -135,15 +136,6 @@ canvas.create_rectangle(
     4.0,
     532.0,
     43.0,
-    fill="#FFFFFF",
-    outline="")
-
-
-canvas.create_rectangle(
-    8.0,
-    49.0,
-    331.0,
-    304.0,
     fill="#FFFFFF",
     outline="")
 
@@ -214,8 +206,6 @@ button_2.place(
     height=35.0
 )
 
-
-
 canvas.create_rectangle(
     7.0,
     262.4906397712401,
@@ -223,6 +213,34 @@ canvas.create_rectangle(
     265.5093504925284,
     fill="#000000",
     outline="")
+
+_canvas = Canvas(
+    window,
+    bg = "#FFFFFF",
+    height = 200,
+    width = 324,
+    bd = 0,
+    highlightthickness = 0,
+    relief = "ridge"
+)
+_canvas.place(x = 8, y = 49)
+scroll_frame = Frame(_canvas, bg = "#ffffff")
+scroll_frame.pack()
+scroll_canvas = Canvas(
+    scroll_frame,
+    bg = "#ffffff",
+    height = 200,
+    width = 324,
+    bd = 0,
+    highlightthickness = 0,
+    relief = "ridge",
+    scrollregion=(0,0,0,0)
+)
+scrollY = Scrollbar(scroll_frame, orient='vertical')
+scrollY.pack(side='right', fill='y')
+scrollY.config(command=scroll_canvas.yview)
+scroll_canvas.config(yscrollcommand=scrollY.set)
+scroll_canvas.pack()
 
 window.resizable(False, False)
 window.mainloop()
