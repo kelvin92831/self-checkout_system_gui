@@ -32,9 +32,11 @@ item_data = {
 }
 
 # item_num = 5
-output_file = r"C:\Users\安\Desktop\self-checkout_system_gui-main\output2.txt" # can choose output txt file here !
+output_file = r" " # can choose output txt file here !
 
 total=0
+service_scale = None 
+
 def reload():
     global total
     try:
@@ -112,22 +114,20 @@ def reload():
         )
 
 #####################
-
 def pay():
     p_window = Toplevel(window)
     p_window.geometry(f"+{window.winfo_x() + window.winfo_width()}+{window.winfo_y()}")
+    
+    amount_paid_label = Label(p_window, text="Amount Paid:", font=("Comic Sans MS", 12))
+    amount_paid_label.pack(anchor='w')
 
-
-    amount_paid_label = Label(p_window, text="Amount Paid:", font=("Comic Sans MS", 14))
-    amount_paid_label.pack()
-
-    amount_paid_entry = Entry(p_window, font=("Comic Sans MS", 14))
+    amount_paid_entry = Entry(p_window, font=("Comic Sans MS", 12))
     amount_paid_entry.pack()
 
     calculate_change_button = tk.Button(
         p_window,
-        text="Paid!",
-        font=("Comic Sans MS", 14),  # Updated font
+        text="Paid !",
+        font=("Comic Sans MS", 12),  # Updated font
         command=lambda: calculate_change(amount_paid_entry.get(), p_window)
     )
     calculate_change_button.pack()
@@ -140,17 +140,38 @@ def calculate_change(amount_paid, p_window):
 
         if change >= 0:
             change_label = tk.Label(p_window, text=f"Give back: ${change:.2f}", font=("Comic Sans MS", 14))
-            change_label.pack()
+            change_label.pack(anchor='w')
         else:
             tk.messagebox.showwarning("Insufficient Payment!", "The amount paid is not enough.")
             change_label = tk.Label(p_window, text="Insufficient Payment!", font=("Comic Sans MS", 14))
-            change_label.pack()
+            change_label.pack(anchor='w')
 
-        exit_button = tk.Button(p_window, text="Exit", command=p_window.destroy, font=("Comic Sans MS", 14))
-        exit_button.pack()
+        rt_score = tk.IntVar()
+        rt_score.set(0)
+
+        def show_score(v):
+            service_rating_label.config(text=f"Service Rating: {rt_score.get()}/10")
+
+        def show_image(event=None):
+            original_image = Image.open(relative_to_assets("thanku.png"))
+            resized_image = original_image.resize((150, 150))
+            tk_img = ImageTk.PhotoImage(resized_image)
+            label_thanku = tk.Label(p_window, image=tk_img, width=130, height=130, anchor='center')
+            label_thanku.image = tk_img  # Keep a reference to the image
+            label_thanku.pack()
+
+            exit_button = tk.Button(p_window, text="Exit", command=p_window.destroy, font=("Comic Sans MS", 12))
+            exit_button.pack()
+
+        service_scale = Scale(p_window, from_=0, to=10, orient=tk.HORIZONTAL, length=200, variable=rt_score, command=show_score)
+        service_scale.pack()
+        service_scale.bind("<ButtonRelease-1>", show_image)  # Use "<ButtonRelease-1>" for the left mouse button
+
+        service_rating_label = tk.Label(p_window, text=f"Service Rating: {rt_score.get()}/10", font=("Comic Sans MS", 12))
+        service_rating_label.pack(anchor='w')
 
     except ValueError:
-        tk.messagebox.showerror("Error", "Invalid input for Amount Paid. Please enter a valid number.")
+        tk.messagebox.showerror("Invalid Input", "Please enter a valid amount.")
 #######################
 
 window = Tk()
