@@ -3,7 +3,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, ttk, Canvas, Entry, Text, Button, PhotoImage, Label, Frame, Scrollbar
-from tkinter import PanedWindow, Toplevel, messagebox
+from tkinter import PanedWindow, Toplevel, messagebox, Scale
 import tkinter as tk
 import tkinter.font as tkFont
 from collections import Counter
@@ -34,7 +34,9 @@ item_data = {
 # item_num = 5
 output_file = r"C:\Users\安\Desktop\self-checkout_system_gui-main\output2.txt" # can choose output txt file here !
 
+total=0
 def reload():
+    global total
     try:
         for i in list(item_data.keys()):
             canvas.delete(f"item_text_{i}")
@@ -110,86 +112,45 @@ def reload():
         )
 
 #####################
-sel_price=0
 
-def pay(): 
-   
-    global sel_price
-    sel_price = 0  # Reset sel_price
+def pay():
+    p_window = Toplevel(window)
+    p_window.geometry(f"+{window.winfo_x() + window.winfo_width()}+{window.winfo_y()}")
 
-    # Create a new Toplevel window for checkboxes
-    checkbox_window = Toplevel(window)   
-    checkbox_window.geometry(f"+{window.winfo_x() + window.winfo_width()}+{window.winfo_y()-50}")
 
-    # Iterate through item_data and create checkboxes
-    for item_id, item_info in item_data.items():
-        var = tk.IntVar()
-        checkbox = tk.Checkbutton(
-            checkbox_window,
-            text=item_info["name"],
-            variable=var,
-            command=lambda i=item_id, v=var: on_checkbox_toggle(i, v)
-        )
-        checkbox.pack(anchor=tk.W, pady=2)
-        checkboxes[item_id] = {"checkbox": checkbox, "var": var}
-
-    # Create an Entry widget for the amount paid
-    amount_paid_label = tk.Label(checkbox_window, text="You Paid:")
+    amount_paid_label = Label(p_window, text="Amount Paid:", font=("Comic Sans MS", 14))
     amount_paid_label.pack()
-    amount_paid_entry = Entry(checkbox_window)
+
+    amount_paid_entry = Entry(p_window, font=("Comic Sans MS", 14))
     amount_paid_entry.pack()
 
-    # Button to calculate change
     calculate_change_button = tk.Button(
-        checkbox_window,
-        text="paid!",
-        command=lambda: calculate_change(amount_paid_entry.get(), checkbox_window)
+        p_window,
+        text="Paid!",
+        font=("Comic Sans MS", 14),  # Updated font
+        command=lambda: calculate_change(amount_paid_entry.get(), p_window)
     )
     calculate_change_button.pack()
 
-def on_checkbox_toggle(item_id, var):
-    global sel_price
-    item_info = item_data.get(item_id, {"name": "Unknown", "price": 0})
-
-    # Calculate the updated total price based on the checkboxes
-    sel_price = sum(item_data[item_id]["price"] for item_id, data in checkboxes.items() if data["var"].get())
-
-    # Display the updated total price
-    update_total_price()
-
-
-# update the total price on the canvas
-def update_total_price():
-    canvas.delete("total")  # Clear previous total price
-    canvas.create_text(
-        425.0,
-        77.0,
-        anchor="nw",
-        text=f"$ {sel_price}",
-        fill="#000000",
-        font=("Comic Sans MS", 32 * -1),
-        tags="total"
-    )
-
-def calculate_change(amount_paid, checkbox_window):
+def calculate_change(amount_paid, p_window):
     try:
+        global total
         amount_paid = float(amount_paid)
-        change = amount_paid - sel_price
+        change = amount_paid - total
 
         if change >= 0:
-            change_label = tk.Label(checkbox_window, text=f"Give back: ${change:.2f}")
+            change_label = tk.Label(p_window, text=f"Give back: ${change:.2f}", font=("Comic Sans MS", 14))
             change_label.pack()
         else:
             tk.messagebox.showwarning("Insufficient Payment!", "The amount paid is not enough.")
-            change_label = tk.Label(checkbox_window, text="Insufficient Payment!")
+            change_label = tk.Label(p_window, text="Insufficient Payment!", font=("Comic Sans MS", 14))
             change_label.pack()
 
-        exit_button = tk.Button(checkbox_window, text="Exit", command=checkbox_window.destroy)
+        exit_button = tk.Button(p_window, text="Exit", command=p_window.destroy, font=("Comic Sans MS", 14))
         exit_button.pack()
 
     except ValueError:
         tk.messagebox.showerror("Error", "Invalid input for Amount Paid. Please enter a valid number.")
-
 #######################
 
 window = Tk()
@@ -332,21 +293,6 @@ scrollY.pack(side='right', fill='y')
 scrollY.config(command=scroll_canvas.yview)
 scroll_canvas.config(yscrollcommand=scrollY.set)
 scroll_canvas.pack()
-
-################
-checkbox_panedwindow = PanedWindow(window, orient=tk.VERTICAL)
-checkboxes = {}
-
-for idx, (item_id, item_info) in enumerate(item_data.items()):
-    var = tk.IntVar()
-    checkbox = tk.Checkbutton(
-        checkbox_panedwindow,
-        text=item_info["name"],
-        command=lambda i=item_id, v=var: on_checkbox_toggle(i, v)
-    )
-    checkbox.pack()
-    checkboxes[item_id] = {"checkbox": checkbox, "var": var, "count": 0}
-##################
 
 window.resizable(False, False)
 window.mainloop()
