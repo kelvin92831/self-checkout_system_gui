@@ -33,7 +33,7 @@ item_data = {
 }
 
 # item_num = 5
-output_file = r" " # can choose output txt file here !
+output_file = "output2.txt" # can choose output txt file here !
 
 total=0
 service_scale = None 
@@ -139,37 +139,38 @@ def calculate_change(amount_paid, p_window):
         amount_paid = float(amount_paid)
         change = amount_paid - total
 
-        if change >= 0:
-            change_label = tk.Label(p_window, text=f"Give back: ${change:.2f}", font=("Comic Sans MS", 14))
-            change_label.pack(anchor='w')
-        else:
+        if change < 0:
             tk.messagebox.showwarning("Insufficient Payment!", "The amount paid is not enough.")
             change_label = tk.Label(p_window, text="Insufficient Payment!", font=("Comic Sans MS", 14))
             change_label.pack(anchor='w')
 
-        rt_score = tk.IntVar()
-        rt_score.set(0)
+        else:
+            change_label = tk.Label(p_window, text=f"Give back: ${change:.2f}", font=("Comic Sans MS", 14))
+            change_label.pack(anchor='w')
 
-        def show_score(v):
-            service_rating_label.config(text=f"Service Rating: {rt_score.get()}/10")
+            rt_score = tk.IntVar()
+            rt_score.set(0)
 
-        def show_image(event=None):
-            original_image = Image.open(relative_to_assets("thanku.png"))
-            resized_image = original_image.resize((150, 150))
-            tk_img = ImageTk.PhotoImage(resized_image)
-            label_thanku = tk.Label(p_window, image=tk_img, width=130, height=130, anchor='center')
-            label_thanku.image = tk_img  # Keep a reference to the image
-            label_thanku.pack()
+            def show_score(v):
+                service_rating_label.config(text=f"Service Rating: {rt_score.get()}/10")
 
-            exit_button = tk.Button(p_window, text="Exit", command=p_window.destroy, font=("Comic Sans MS", 12))
-            exit_button.pack()
+            def show_image(event=None):
+                original_image = Image.open(relative_to_assets("thanku.png"))
+                resized_image = original_image.resize((150, 150))
+                tk_img = ImageTk.PhotoImage(resized_image)
+                label_thanku = tk.Label(p_window, image=tk_img, width=130, height=130, anchor='center')
+                label_thanku.image = tk_img  # Keep a reference to the image
+                label_thanku.pack()
 
-        service_scale = Scale(p_window, from_=0, to=10, orient=tk.HORIZONTAL, length=200, variable=rt_score, command=show_score)
-        service_scale.pack()
-        service_scale.bind("<ButtonRelease-1>", show_image)  # Use "<ButtonRelease-1>" for the left mouse button
+                exit_button = tk.Button(p_window, text="Exit", command=p_window.destroy, font=("Comic Sans MS", 12))
+                exit_button.pack()
 
-        service_rating_label = tk.Label(p_window, text=f"Service Rating: {rt_score.get()}/10", font=("Comic Sans MS", 12))
-        service_rating_label.pack(anchor='w')
+            service_scale = Scale(p_window, from_=0, to=10, orient=tk.HORIZONTAL, length=200, variable=rt_score, command=show_score)
+            service_scale.pack()
+            service_scale.bind("<ButtonRelease-1>", show_image)  # Use "<ButtonRelease-1>" for the left mouse button
+
+            service_rating_label = tk.Label(p_window, text=f"Service Rating: {rt_score.get()}/10", font=("Comic Sans MS", 12))
+            service_rating_label.pack(anchor='w')
 
     except ValueError:
         tk.messagebox.showerror("Invalid Input", "Please enter a valid amount.")
