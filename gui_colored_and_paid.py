@@ -7,6 +7,7 @@ from tkinter import PanedWindow, Toplevel, messagebox, Scale
 import tkinter as tk
 import tkinter.font as tkFont
 from collections import Counter
+from PIL import Image, ImageTk
 
 OUTPUT_PATH = Path(__file__).parent
 print(OUTPUT_PATH)
