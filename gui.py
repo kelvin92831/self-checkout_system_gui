@@ -1,39 +1,43 @@
-
 from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Label, Frame
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Label, Frame, Scrollbar
 from collections import Counter
-
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"./assets/frame0")
-
+print(OUTPUT_PATH)
+ASSETS_PATH = OUTPUT_PATH / "assets/frame0"  #modifiled
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 item_data = {
-    0: {"name": "strawberry", "price": 50},
-    1: {"name": "berry", "price": 20},
-    2: {"name": "apple", "price": 10},
-    3: {"name": "banana", "price": 15},
-    4: {"name": "cheery", "price": 20}
+    "donat": {"name": "甜甜圈", "price": 20},
+    "grape": {"name": "葡萄乾麵包", "price": 40},
+    "square": {"name": "大理石磚麵包", "price": 50},
+    "strawberry": {"name": "草莓麵包", "price": 25},
+    "pudding": {"name": "布丁麵包", "price": 25},
+    "meat_floss": {"name": "肉鬆麵包", "price": 30},
+    "pizza": {"name": "披薩麵包", "price": 20},
+    "matcha": {"name": "抹茶麵包", "price": 20},
+    "sugar": {"name": "糖霜麵包", "price": 20},
+    "strawberry_donat": {"name": "草莓甜甜圈", "price": 20},
+    "black_eye": {"name": "黑眼豆豆麵包", "price": 20},
 }
 
-item_num = 5
+
 
 def reload():
     try:
-        for i in range(0, item_num):
+        for i in list(item_data.keys()):
             canvas.delete(f"item_text_{i}")
         canvas.delete("items_n")
         canvas.delete("total")        
 
         with open("output.txt", "r") as file:
             lines = file.readlines()
-            item_ids = [line.split()[0] for line in lines]
-            
+            item_ids = [line.split()[0] for line in lines if line.strip()]
+
             # 使用 Counter 計算每個 ID 的出現次數
             id_counts = Counter(item_ids)
             cnt=0
@@ -41,24 +45,27 @@ def reload():
             for item_id, count in id_counts.items():
                 cnt+=1
                 # 取得字典中對應的項目資料
-                item_info = item_data.get(int(item_id), {"name": "Unknown", "price": "N/A"})
+                item_info = item_data.get(item_id, {"name": "Unknown", "price": "N/A"})
                 
                 # 格式化要顯示的文字
-                text_content = f"{item_info['name']}\t\t *{count}\t $ {item_info['price']*count}"
+                text_content = [f"{item_info['name']}", f"*{count}", f"$ {item_info['price']*count}"]
                 total += item_info['price'] * count
 
                 # 清除先前的文字
                 canvas.delete(f"item_text_{item_id}")
- 
+
                 # 在 Canvas 上顯示文字
-                canvas.create_text(
-                    30, 70 + cnt * 30,  # 位置 (x, y)，每個項目間隔 50 個像素
-                    anchor="nw",
-                    text=text_content,
-                    fill="#000000",
-                    font=("Inter Bold", 16),
-                    tag=f"item_text_{item_id}"  # 使用 tag 以便稍後清除
-                )
+                offsets = [30, 170, 250]
+                for el in range(3):
+                    canvas.create_text(
+                        offsets[el], 70 + cnt * 30,  # 位置 (x, y)，每個項目間隔 50 個像素
+                        anchor="nw",
+                        text=text_content[el],
+                        fill="#000000",
+                        font=("Inter Bold", 16),
+                        tag=f"item_text_{item_id}"  # 使用 tag 以便稍後清除
+                    )
+
             canvas.create_text(
                 255.0,
                 271.0,
@@ -76,13 +83,13 @@ def reload():
                 fill="#000000",
                 font=("Inter", 32 * -1),
                 tags="total"
-            ) 
-                
+            )
+
 
     except FileNotFoundError:
         # 清除先前的文字
         canvas.delete("item_text")
-        
+
         # 在 Canvas 上顯示錯誤訊息
         canvas.create_text(
             10, 10,  # 位置 (x, y)
@@ -92,7 +99,6 @@ def reload():
             font=("Inter Bold", 24),
             tag="item_text"  # 使用 tag 以便稍後清除
         )
-
 
 
 
@@ -135,14 +141,6 @@ canvas.create_rectangle(
     fill="#FFFFFF",
     outline="")
 
-canvas.create_rectangle(
-    8.0,
-    49.0,
-    331.0,
-    304.0,
-    fill="#FFFFFF",
-    outline="")
-
 canvas.create_text(
     27.0,
     58.0,
@@ -151,6 +149,14 @@ canvas.create_text(
     fill="#000000",
     font=("Inter Bold", 20 * -1)
 )
+
+canvas.create_rectangle(
+    8.0,
+    49.0,
+    331.0,
+    304.0,
+    fill="#FFFFFF",
+    outline="")
 
 canvas.create_rectangle(
     340.0,
@@ -219,8 +225,6 @@ canvas.create_rectangle(
     265.5093504925284,
     fill="#000000",
     outline="")
-
-
 
 window.resizable(False, False)
 window.mainloop()
